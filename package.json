@@ -1,0 +1,28 @@
+{
+  "name": "akinjide-proxy",
+  "version": "1.0.0",
+  "description": "Proxy for Akinjide Resume PDF",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akinjide/akinjide-proxy.git"
+  },
+  "author": "Akinjide Bankole <r@akinjide.me>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akinjide/akinjide-proxy/issues"
+  },
+  "homepage": "https://github.com/akinjide/akinjide-proxy#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "forever": "^0.15.3",
+    "morgan": "^1.7.0",
+    "phantomjs-prebuilt": "^2.1.14"
+  }
+}
