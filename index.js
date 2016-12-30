@@ -15,7 +15,12 @@ app.get('/:page', (req, res) => {
   const options = {
     root: __dirname + '/docs/',
     dotfiles: 'deny',
-    headers: { 'x-timestamp': Date.now(), 'x-sent': true }
+    headers: {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=' + page + '.pdf',
+      'x-timestamp': Date.now(),
+      'x-sent': true
+    }
   }
 
   fs.lstat('docs/' + page + '.pdf', (err, result) => {
@@ -35,9 +40,13 @@ app.get('/:page', (req, res) => {
           if (err) throw err
           // if (data) res.download('docs/' + page + '.pdf')
 
-          res.set('Content-Type', 'application/pdf')
+          res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename=' + page + '.pdf',
+            'Content-Length': data.length
+          })
           res.send(data)
-          console.log('Sent:', page + '.pdf')
+          console.log('Generate and Sent:', page + '.pdf')
         })
       })
     }
