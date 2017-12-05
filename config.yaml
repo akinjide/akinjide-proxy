@@ -1,0 +1,21 @@
+baseurl: https://resume.akinjide.me/#resume
+filename: default
+options:
+  phantom:
+    clipRect:
+      top: 0
+      left: 0
+    viewportSize:
+      width: 1024
+      height: 768
+    quality: 100%
+
+  node:
+    port: 1334
+    cacheRoot: docs/
+    headers:
+      x-sent: true
+      content-type:
+        pdf: application/pdf
+        png: image/png
+        jpeg: image/jpeg

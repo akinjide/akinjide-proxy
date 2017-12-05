@@ -2,16 +2,26 @@ console.log('Loading web page')
 
 const page = require('webpage').create()
 const args = require('system').args
-const url = 'https://resume.akinjide.me/#' + args[1]
+const config = JSON.parse(args[1])
+const format = args[2]
+const url = config.baseurl
+const longfilepath = config.options.node.cacheRoot + config.filename + "." + format
 
-page.viewportSize = { width: 1024, height: 768 }
-page.clipRect = { top: 0, left: 0 }
+page.viewportSize = {
+  width: config.options.phantom.viewportSize.width,
+  height: config.options.phantom.viewportSize.height
+}
+
+page.clipRect = {
+  top: config.options.phantom.clipRect.top,
+  left: config.options.phantom.clipRect.left
+}
 
 page.open(url, function(status) {
   console.log('Page loaded')
 
   setTimeout(function() {
-    page.render('docs/' + args[1] + '.pdf')
+    page.render(longfilepath)
     console.log('Page rendered')
     phantom.exit()
   }, 10000)

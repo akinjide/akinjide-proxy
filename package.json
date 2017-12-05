@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "npm install -g forever; forever start index.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,8 @@
   "homepage": "https://github.com/akinjide/akinjide-proxy#readme",
   "dependencies": {
     "express": "^4.14.0",
-    "forever": "^0.15.3",
+    "forever-monitor": "^1.7.1",
+    "js-yaml": "^3.7.0",
     "morgan": "^1.7.0",
     "phantomjs-prebuilt": "^2.1.14"
   }
