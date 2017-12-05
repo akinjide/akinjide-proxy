@@ -13,7 +13,7 @@ try {
   throw e;
 }
 
-app.set('port', config.options.node.port || 1334)
+app.set('port', config.options.node.port || process.env.PORT)
 app.set('trust proxy', true)
 
 app.use(morgan('combined'))
