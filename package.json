@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-  	"preinstall": "npm install -g forever",
+    "preinstall": "npm install -g forever",
     "start": "forever start index.js"
   },
   "repository": {

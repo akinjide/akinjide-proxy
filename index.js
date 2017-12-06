@@ -19,11 +19,17 @@ app.set('trust proxy', true)
 app.use(morgan('combined'))
 
 app.get('/', (req, res) => {
+  const regexp = /^(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
   let format = req.query.format
   let filename = req.query.filename
+  let url = req.query.url
 
   if (filename) {
-		config.filename = filename
+    config.filename = filename
+  }
+
+  if (url || regexp.test(url)) {
+    config.baseurl = url
   }
 
   if (format == null || !format.match(/(pdf|png|jpeg)/i)) {
