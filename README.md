@@ -25,7 +25,7 @@ Using *aproxy* is ridiculously simple.
 
 ## Example
 
-`https://aproxy.herokuapp.com?format=png&filename=google&url=https://www.google.me`
+`https://aproxy.herokuapp.com?format=png&filename=google&url=https://www.google.com`
 
 ## License
 
