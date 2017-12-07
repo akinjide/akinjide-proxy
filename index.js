@@ -20,25 +20,25 @@ app.use(morgan('combined'))
 
 app.get('/', (req, res) => {
   const regexp = /^(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-  let format = req.query.format
-  let filename = req.query.filename
-  let url = req.query.url
 
-  if (filename) {
-    config.filename = filename
+  if (req.query.filename) {
+    config.filename = req.query.filename
   }
 
-  if (url || regexp.test(url)) {
-    config.baseurl = url
+  if (req.query.url || regexp.test(req.query.url)) {
+    config.baseurl = req.query.url
   }
 
-  if (format == null || !format.match(/(pdf|png|jpeg)/i)) {
+  if (req.query.format == null || !req.query.format.match(/(pdf|png|jpeg)/i)) {
     res.status(404).send({ "error": "FFError: Unknown format pdf, png or jpeg" })
   }
 
-  const longfilepath = `${config.options.node.cacheRoot}${config.filename}.${format}`
-  const shortfilename = `${config.filename}.${format}`
-  const headers = Object.assign({
+  config.format = req.query.format
+
+  let longfilepath = `${config.options.node.cacheRoot}${config.filename}.${config.format}`
+  let shortfilename = `${config.filename}.${config.format}`
+
+  let headers = Object.assign({
 //     'Content-Type': 'application/pdf',
     'Content-Disposition': `attachment; filename=${shortfilename}`,
     'x-timestamp': Date.now()
@@ -52,13 +52,13 @@ app.get('/', (req, res) => {
 
   fs.lstat(longfilepath, (err, result) => {
     if (!err) {
-      res.type(format)
-      res.sendFile(`${config.filename}.${format}`, options, (err) => {
+      res.type(config.format)
+      res.sendFile(shortfilename, options, (err) => {
         if (err) throw err
         else console.log('Sent:', shortfilename)
       })
     } else {
-      const program = phantomjs.exec('phantomjs-script.js', JSON.stringify(config), format)
+      const program = phantomjs.exec('phantomjs-script.js', JSON.stringify(config))
 
       program.stdout.pipe(process.stdout)
       program.stderr.pipe(process.stderr)
@@ -66,7 +66,7 @@ app.get('/', (req, res) => {
         fs.readFile(longfilepath, (err, data) => {
           if (err) throw err
 
-          res.type(format)
+          res.type(config.format)
           res.set({
             // 'Content-Type': 'application/pdf',
             'Content-Disposition': `attachment; filename=${shortfilename}`,
@@ -76,10 +76,8 @@ app.get('/', (req, res) => {
           console.log('Generate and Sent:', shortfilename)
         })
       })
-
     }
   })
-
 })
 
 

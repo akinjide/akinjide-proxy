@@ -3,9 +3,7 @@ console.log('Loading web page')
 const page = require('webpage').create()
 const args = require('system').args
 const config = JSON.parse(args[1])
-const format = args[2]
-const url = config.baseurl
-const longfilepath = config.options.node.cacheRoot + config.filename + "." + format
+const longfilepath = config.options.node.cacheRoot + config.filename + "." + config.format
 
 page.viewportSize = {
   width: config.options.phantom.viewportSize.width,
@@ -17,7 +15,7 @@ page.clipRect = {
   left: config.options.phantom.clipRect.left
 }
 
-page.open(url, function(status) {
+page.open(config.baseurl, function(status) {
   console.log('Page loaded')
 
   setTimeout(function() {
