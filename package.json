@@ -1,6 +1,6 @@
 {
-  "name": "akinjide-proxy",
-  "version": "1.0.0",
+  "name": "aproxy",
+  "version": "1.4.0",
   "description": "Proxy for Akinjide Resume PDF",
   "main": "index.js",
   "directories": {
@@ -12,19 +12,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/akinjide/akinjide-proxy.git"
+    "url": "git+https://github.com/akinjide/aproxy.git"
   },
   "author": "Akinjide Bankole <r@akinjide.me>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/akinjide/akinjide-proxy/issues"
+    "url": "https://github.com/akinjide/aproxy/issues"
   },
-  "homepage": "https://github.com/akinjide/akinjide-proxy#readme",
+  "homepage": "https://github.com/akinjide/aproxy#readme",
   "dependencies": {
     "express": "^4.14.0",
     "forever-monitor": "^1.7.1",
     "js-yaml": "^3.7.0",
     "morgan": "^1.7.0",
-    "phantomjs-prebuilt": "^2.1.14"
+    "phantomjs-prebuilt": "^2.1.14",
+    "puppeteer": "^1.1.1"
   }
 }

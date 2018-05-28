@@ -2,14 +2,14 @@ const app = require('express')()
 const fs = require('fs')
 const morgan = require('morgan')
 const yaml = require('js-yaml')
-
 const phantomjs = require('phantomjs-prebuilt')
+
+const regexp = /^(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
 let config
 
 try {
   config = yaml.safeLoad(fs.readFileSync(`${__dirname}/config.yaml`, 'utf8'))
 } catch(e) {
-  // statements
   throw e;
 }
 
@@ -19,8 +19,6 @@ app.set('trust proxy', true)
 app.use(morgan('combined'))
 
 app.get('/', (req, res) => {
-  const regexp = /^(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-
   if (req.query.filename) {
     config.filename = req.query.filename
   }
@@ -29,18 +27,20 @@ app.get('/', (req, res) => {
     config.baseurl = req.query.url
   }
 
-  if (req.query.format == null || !req.query.format.match(/(pdf|png|jpeg)/i)) {
-    res.status(404).send({ "error": "FFError: Unknown format pdf, png or jpeg" })
+  if (req.query.format == null) {
+    return res.status(400).send({ "?format": "is required" })
+  }
+
+  if (!req.query.format.match(/(pdf|png|jpeg)/i)) {
+    return res.status(400).send({ "error": "FFError: Unknown format pdf, png or jpeg" })
   }
 
   config.format = req.query.format
-
-  let longfilepath = `${config.options.node.cacheRoot}${config.filename}.${config.format}`
-  let shortfilename = `${config.filename}.${config.format}`
+  config.long_file_path = `${config.options.node.cacheRoot}${config.filename}.${config.format}`
+  config.short_filename = `${config.filename}.${config.format}`
 
   let headers = Object.assign({
-//     'Content-Type': 'application/pdf',
-    'Content-Disposition': `attachment; filename=${shortfilename}`,
+    'Content-Disposition': `attachment; filename=${config.short_filename}`,
     'x-timestamp': Date.now()
   }, config.options.node.headers)
 
@@ -50,12 +50,12 @@ app.get('/', (req, res) => {
     headers: headers
   }
 
-  fs.lstat(longfilepath, (err, result) => {
+  fs.lstat(config.long_file_path, (err, result) => {
     if (!err) {
       res.type(config.format)
-      res.sendFile(shortfilename, options, (err) => {
+      res.sendFile(config.short_filename, options, (err) => {
         if (err) throw err
-        else console.log('Sent:', shortfilename)
+        else console.log('Sent:', config.short_filename)
       })
     } else {
       const program = phantomjs.exec('phantomjs-script.js', JSON.stringify(config))
@@ -63,17 +63,16 @@ app.get('/', (req, res) => {
       program.stdout.pipe(process.stdout)
       program.stderr.pipe(process.stderr)
       program.on('exit', code => {
-        fs.readFile(longfilepath, (err, data) => {
-          if (err) throw err
+        fs.readFile(config.long_file_path, (err, data) => {
+          if (err) console.log('File write: ', err)
 
           res.type(config.format)
           res.set({
-            // 'Content-Type': 'application/pdf',
-            'Content-Disposition': `attachment; filename=${shortfilename}`,
+            'Content-Disposition': `attachment; filename=${config.short_filename}`,
             'Content-Length': data.length
           })
           res.send(data)
-          console.log('Generate and Sent:', shortfilename)
+          console.log('Generate and Sent: %s', config.short_filename)
         })
       })
     }
@@ -95,4 +94,4 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'))
 
 console.info('Application starting...')
-console.log('stuff happening ¯\_(ツ)_/¯ *:', app.get('port'))
+console.log('stuff happening ¯\_(ツ)_/¯ *: %s', app.get('port'))
