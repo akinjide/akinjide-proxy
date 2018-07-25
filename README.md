@@ -23,9 +23,11 @@ Using *aproxy* is ridiculously simple.
 
 `?url=https://www.akinjide.me` - URI to capture. Defaults? `https://www.akinjide.me`
 
+`?delay=1000` - Generate Delay in miliseconds, specify if webpage loads slowly
+
 ## Example
 
-`https://aproxy.herokuapp.com?format=png&filename=google&url=https://www.google.com`
+`https://aproxy.herokuapp.com?format=png&filename=google&delay=1000&url=https://www.google.com`
 
 ## License
 

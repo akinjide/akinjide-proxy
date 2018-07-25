@@ -1,6 +1,7 @@
 baseurl: https://www.akinjide.me
 filename: default
 options:
+  delay: 0
   phantom:
     clipRect:
       top: 0

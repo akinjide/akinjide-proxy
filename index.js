@@ -27,12 +27,16 @@ app.get('/', (req, res) => {
     config.baseurl = req.query.url
   }
 
+  if (+req.query.delay) {
+    config.options.delay = +req.query.delay
+  }
+
   if (req.query.format == null) {
     return res.status(400).send({ "?format": "is required" })
   }
 
   if (!req.query.format.match(/(pdf|png|jpeg)/i)) {
-    return res.status(400).send({ "error": "FFError: Unknown format pdf, png or jpeg" })
+    return res.status(400).send({ "error": "FFERR: Unknown format pdf, png or jpeg" })
   }
 
   config.format = req.query.format

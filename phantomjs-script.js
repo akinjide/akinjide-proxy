@@ -16,7 +16,10 @@ page.clipRect = {
 
 page.open(config.baseurl, function(status) {
   console.log('Page loaded: ', status)
-  page.render(config.long_file_path)
-  console.log('Page rendered')
-  phantom.exit()
+
+  setTimeout(function() {
+    page.render(config.long_file_path)
+    console.log('Page rendered')
+    phantom.exit()
+  }, config.options.delay)
 })
