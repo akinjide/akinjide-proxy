@@ -18,12 +18,14 @@ app.set('trust proxy', true)
 
 app.use(morgan('combined'))
 
+app.get('/ping', (req, res) => res.status(200).send('PONG'))
 app.get('/', (req, res) => {
   if (req.query.filename) {
     config.filename = req.query.filename
   }
 
   if (req.query.url || regexp.test(req.query.url)) {
+    // FIXME: encodeURIComponent url but test http or https first
     config.baseurl = req.query.url
   }
 
